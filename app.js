@@ -1,44 +1,33 @@
 import { SUPABASE_URL, SUPABASE_ANON_KEY } from './supabase.js';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-const $ = s => document.querySelector(s);
+const supabase=createClient(SUPABASE_URL,SUPABASE_ANON_KEY); const $=s=>document.querySelector(s);
+const esc=v=>{const d=document.createElement('div');d.textContent=v??'';return d.innerHTML};
+let adminCoupons=[],selectedCouponId=null,editingMatchId=null;
 
-function escapeHtml(v=''){const d=document.createElement('div');d.textContent=v;return d.innerHTML}
-
-async function loadMatches(){
-  const {data,error}=await supabase.from('matches').select('*').order('created_at',{ascending:true});
-  const box=$('#matchesContainer'); box.innerHTML='';
-  if(error){box.innerHTML='<p class="muted">Məlumat yüklənmədi.</p>';return}
-  let total=1;
-  data.forEach(m=>{total*=Number(m.odd);box.insertAdjacentHTML('beforeend',`<div class="match"><div><strong>${escapeHtml(m.teams)}</strong><small>${escapeHtml(m.league||'')}</small></div><div class="prediction">${escapeHtml(m.prediction)} <span class="odd">${Number(m.odd).toFixed(2)}</span></div></div>`)});
-  $('#totalOdd').textContent=total.toFixed(2);
-  const statuses=data.map(x=>x.status);
-  const status=statuses.includes('lost')?'lost':data.length&&statuses.every(x=>x==='won')?'won':'pending';
-  $('#couponStatus').textContent=status==='lost'?'Uğursuz':status==='won'?'Uğurlu':'Gözləyir';
-  $('#couponStatus').className='status '+status;
+async function publicCoupon(){
+ const {data:coupons,error}=await supabase.from('coupons').select('*').order('created_at',{ascending:false}).limit(1);
+ if(error||!coupons?.length){$('#couponTitle').textContent='Hələ kupon yoxdur';$('#matchesContainer').innerHTML='<p class="muted">Hələ kupon paylaşılmayıb.</p>';return}
+ const c=coupons[0]; const {data:matches}=await supabase.from('matches').select('*').eq('coupon_id',c.id).order('created_at');
+ $('#couponTitle').textContent=`${c.title} • ${c.coupon_date||''}`; let total=1; const box=$('#matchesContainer');box.innerHTML='';
+ (matches||[]).forEach(m=>{total*=Number(m.odd);box.insertAdjacentHTML('beforeend',`<div class="match-row"><div><strong>${esc(m.teams)}</strong><small>${esc(m.league||'')}</small></div><div class="prediction">${esc(m.prediction)} <span class="odd">${Number(m.odd).toFixed(2)}</span></div></div>`)});
+ $('#totalOdd').textContent=total.toFixed(2); const st=c.status; $('#couponStatus').textContent=st==='won'?'Gəldi':st==='lost'?'Gəlmədi':'Gözləyir'; $('#couponStatus').className='status '+(st==='won'?'won':st==='lost'?'lost':'pending');
 }
+async function stats(){const {data}=await supabase.from('matches').select('status');const a=data||[],won=a.filter(x=>x.status==='won').length,lost=a.filter(x=>x.status==='lost').length;const rate=won+lost?((won/(won+lost))*100).toFixed(1):0;$('#totalPredictions').textContent=a.length;$('#wonPredictions').textContent=won;$('#lostPredictions').textContent=lost;$('#successRate').textContent=rate+'%';$('#heroRate').textContent=rate+'%';}
+async function analyses(){const {data}=await supabase.from('analyses').select('*').order('created_at',{ascending:false});const b=$('#analysesContainer');b.innerHTML='';if(!data?.length){b.innerHTML='<p class="muted">Hələ analiz yoxdur.</p>';return}data.forEach(a=>b.insertAdjacentHTML('beforeend',`<article class="card"><h3>${esc(a.title)}</h3><div class="meta">${esc(a.stadium||'Futbol Analizi')} • ${new Date(a.created_at).toLocaleDateString('az-AZ')}</div><p>${esc(a.content)}</p></article>`));}
 
-async function loadAnalyses(){
- const {data,error}=await supabase.from('analyses').select('*').order('created_at',{ascending:false});
- const box=$('#analysesContainer');box.innerHTML='';
- if(error||!data?.length){box.innerHTML='<p class="muted">Hələ analiz paylaşılmayıb.</p>';return}
- data.forEach(a=>box.insertAdjacentHTML('beforeend',`<article class="card analysis"><h3>${escapeHtml(a.title)}</h3><div class="meta">${escapeHtml(a.stadium||'Futbol Analizi')} • ${new Date(a.created_at).toLocaleDateString('az-AZ')}</div><p>${escapeHtml(a.content)}</p></article>`));
-}
+$('#adminBtn').onclick=async()=>{$('#adminModal').classList.remove('hidden');const {data:{session}}=await supabase.auth.getSession();session?showAdmin():showLogin()};$('#closeAdmin').onclick=()=>$('#adminModal').classList.add('hidden');function showAdmin(){$('#loginView').classList.add('hidden');$('#adminView').classList.remove('hidden');adminLoad()}function showLogin(){$('#adminView').classList.add('hidden');$('#loginView').classList.remove('hidden')}
+$('#loginForm').onsubmit=async e=>{e.preventDefault();const {error}=await supabase.auth.signInWithPassword({email:$('#email').value,password:$('#password').value});if(error)alert(error.message);else showAdmin()};$('#logoutBtn').onclick=async()=>{await supabase.auth.signOut();showLogin()};
 
-async function loadStats(){
- const {data,error}=await supabase.from('matches').select('status'); if(error)return;
- const total=data.length,won=data.filter(x=>x.status==='won').length,lost=data.filter(x=>x.status==='lost').length;
- const rate=(won+lost)?((won/(won+lost))*100).toFixed(1):0;
- $('#totalPredictions').textContent=total;$('#wonPredictions').textContent=won;$('#lostPredictions').textContent=lost;$('#successRate').textContent=rate+'%';$('#heroRate').textContent=rate+'%';
-}
-
-$('#adminBtn').onclick=async()=>{ $('#adminModal').classList.remove('hidden'); const {data:{session}}=await supabase.auth.getSession(); session?showAdmin():showLogin(); }
-$('#closeAdmin').onclick=()=>$('#adminModal').classList.add('hidden');
-function showAdmin(){$('#loginView').classList.add('hidden');$('#adminView').classList.remove('hidden')}
-function showLogin(){$('#adminView').classList.add('hidden');$('#loginView').classList.remove('hidden')}
-$('#loginForm').onsubmit=async e=>{e.preventDefault();const {error}=await supabase.auth.signInWithPassword({email:$('#email').value,password:$('#password').value});if(error)alert(error.message);else showAdmin();}
-$('#logoutBtn').onclick=async()=>{await supabase.auth.signOut();showLogin()}
-$('#matchForm').onsubmit=async e=>{e.preventDefault();const {error}=await supabase.from('matches').insert({teams:$('#teams').value,league:$('#league').value,prediction:$('#prediction').value,odd:Number($('#odd').value)});if(error)alert(error.message);else{e.target.reset();await loadMatches();await loadStats();}}
-$('#analysisForm').onsubmit=async e=>{e.preventDefault();const {error}=await supabase.from('analyses').insert({title:$('#analysisTitle').value,stadium:$('#stadium').value,content:$('#analysisText').value});if(error)alert(error.message);else{e.target.reset();await loadAnalyses();}}
-$('#copyCoupon').onclick=async()=>{const {data}=await supabase.from('matches').select('*').order('created_at');let text='⚽ FUTBOLIA BET - Günün Kuponu\n\n';let total=1;(data||[]).forEach(m=>{total*=Number(m.odd);text+=`${m.teams}\nTəxmin: ${m.prediction} | Əmsal: ${Number(m.odd).toFixed(2)}\n\n`});text+=`Ümumi Əmsal: ${total.toFixed(2)}`;await navigator.clipboard.writeText(text);alert('Kupon kopyalandı!')}
-loadMatches();loadAnalyses();loadStats();
+document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.tab-panel').forEach(x=>x.classList.add('hidden'));t.classList.add('active');$('#'+t.dataset.tab).classList.remove('hidden');if(t.dataset.tab==='matchesTab')renderMatches()});
+async function adminLoad(){await renderCoupons();await renderMatches();await renderAdminAnalyses()}
+async function renderCoupons(){const {data}=await supabase.from('coupons').select('*').order('created_at',{ascending:false});adminCoupons=data||[];const sel=$('#matchCoupon');sel.innerHTML=adminCoupons.map(c=>`<option value="${c.id}">${esc(c.title)} • ${c.coupon_date||''}</option>`).join('');if(selectedCouponId)sel.value=selectedCouponId;else if(adminCoupons[0]){selectedCouponId=adminCoupons[0].id;sel.value=selectedCouponId}const box=$('#adminCoupons');box.innerHTML=adminCoupons.length?adminCoupons.map(c=>`<div class="admin-item"><strong>${esc(c.title)}</strong><small>${c.coupon_date||''} • ${c.status==='won'?'Gəldi':c.status==='lost'?'Gəlmədi':'Gözləyir'}</small><div class="mini-actions"><button class="mini good" data-coupon-status="won" data-id="${c.id}">Gəldi</button><button class="mini bad" data-coupon-status="lost" data-id="${c.id}">Gəlmədi</button><button class="mini" data-coupon-status="pending" data-id="${c.id}">Gözləyir</button><button class="mini del" data-delete-coupon="${c.id}">Sil</button><button class="mini" data-select-coupon="${c.id}">Oyunları göstər</button></div></div>`).join(''):'<p class="muted">Kupon yoxdur.</p>';
+box.querySelectorAll('[data-coupon-status]').forEach(b=>b.onclick=async()=>{await supabase.from('coupons').update({status:b.dataset.couponStatus}).eq('id',b.dataset.id);await adminLoad();await publicCoupon();await stats()});box.querySelectorAll('[data-delete-coupon]').forEach(b=>b.onclick=async()=>{if(confirm('Bu kupon və içindəki oyunlar silinsin?')){await supabase.from('coupons').delete().eq('id',b.dataset.deleteCoupon);await adminLoad();await publicCoupon();await stats()}});box.querySelectorAll('[data-select-coupon]').forEach(b=>b.onclick=()=>{selectedCouponId=b.dataset.selectCoupon;$('#matchCoupon').value=selectedCouponId;document.querySelector('[data-tab="matchesTab"]').click();renderMatches()});}
+$('#couponForm').onsubmit=async e=>{e.preventDefault();const {data,error}=await supabase.from('coupons').insert({title:$('#couponName').value,coupon_date:$('#couponDate').value||null}).select().single();if(error)alert(error.message);else{$('#couponForm').reset();selectedCouponId=data.id;await adminLoad()}};
+$('#matchCoupon').onchange=()=>{selectedCouponId=$('#matchCoupon').value;renderMatches()};
+async function renderMatches(){if(!selectedCouponId){$('#adminMatches').innerHTML='<p class="muted">Əvvəl kupon yarat.</p>';return}const {data}=await supabase.from('matches').select('*').eq('coupon_id',selectedCouponId).order('created_at');const box=$('#adminMatches');box.innerHTML=data?.length?data.map(m=>`<div class="admin-item"><strong>${esc(m.teams)}</strong><small>${esc(m.prediction)} • ${Number(m.odd).toFixed(2)} • ${m.status==='won'?'Gəldi':m.status==='lost'?'Gəlmədi':'Gözləyir'}</small><div class="mini-actions"><button class="mini good" data-match-status="won" data-id="${m.id}">Gəldi</button><button class="mini bad" data-match-status="lost" data-id="${m.id}">Gəlmədi</button><button class="mini" data-match-status="pending" data-id="${m.id}">Gözləyir</button><button class="mini edit" data-edit-match='${JSON.stringify(m).replace(/'/g,'&#39;')}'>Redaktə</button><button class="mini del" data-delete-match="${m.id}">Sil</button></div></div>`).join(''):'<p class="muted">Bu kuponda oyun yoxdur.</p>';
+box.querySelectorAll('[data-match-status]').forEach(b=>b.onclick=async()=>{await supabase.from('matches').update({status:b.dataset.matchStatus}).eq('id',b.dataset.id);await renderMatches();await publicCoupon();await stats()});box.querySelectorAll('[data-delete-match]').forEach(b=>b.onclick=async()=>{if(confirm('Bu oyunu silmək istəyirsən?')){await supabase.from('matches').delete().eq('id',b.dataset.deleteMatch);await renderMatches();await publicCoupon();await stats()}});box.querySelectorAll('[data-edit-match]').forEach(b=>b.onclick=()=>{const m=JSON.parse(b.dataset.editMatch);editingMatchId=m.id;selectedCouponId=m.coupon_id;$('#matchCoupon').value=m.coupon_id;$('#teams').value=m.teams;$('#league').value=m.league||'';$('#prediction').value=m.prediction;$('#odd').value=m.odd;$('#matchFormTitle').textContent='Oyunu redaktə et';$('#cancelEdit').classList.remove('hidden')});}
+$('#matchForm').onsubmit=async e=>{e.preventDefault();const payload={coupon_id:$('#matchCoupon').value,teams:$('#teams').value,league:$('#league').value,prediction:$('#prediction').value,odd:Number($('#odd').value)};let r=editingMatchId?await supabase.from('matches').update(payload).eq('id',editingMatchId):await supabase.from('matches').insert(payload);if(r.error)alert(r.error.message);else{e.target.reset();editingMatchId=null;$('#matchFormTitle').textContent='Oyun əlavə et';$('#cancelEdit').classList.add('hidden');await renderMatches();await publicCoupon();await stats()}};$('#cancelEdit').onclick=()=>{$('#matchForm').reset();editingMatchId=null;$('#matchFormTitle').textContent='Oyun əlavə et';$('#cancelEdit').classList.add('hidden')};
+$('#analysisForm').onsubmit=async e=>{e.preventDefault();const {error}=await supabase.from('analyses').insert({title:$('#analysisTitle').value,stadium:$('#stadium').value,content:$('#analysisText').value});if(error)alert(error.message);else{e.target.reset();await renderAdminAnalyses();await analyses()}};
+async function renderAdminAnalyses(){const {data}=await supabase.from('analyses').select('*').order('created_at',{ascending:false});const b=$('#adminAnalyses');b.innerHTML=(data||[]).map(a=>`<div class="admin-item"><strong>${esc(a.title)}</strong><small>${new Date(a.created_at).toLocaleDateString('az-AZ')}</small><div class="mini-actions"><button class="mini del" data-delete-analysis="${a.id}">Sil</button></div></div>`).join('')||'<p class="muted">Analiz yoxdur.</p>';b.querySelectorAll('[data-delete-analysis]').forEach(x=>x.onclick=async()=>{if(confirm('Analiz silinsin?')){await supabase.from('analyses').delete().eq('id',x.dataset.deleteAnalysis);await renderAdminAnalyses();await analyses()}})}
+$('#copyCoupon').onclick=async()=>{const {data:c}=await supabase.from('coupons').select('*').order('created_at',{ascending:false}).limit(1);if(!c?.length)return;const {data:m}=await supabase.from('matches').select('*').eq('coupon_id',c[0].id).order('created_at');let text=`⚽ FUTBOLIA BET - ${c[0].title}\n\n`,total=1;(m||[]).forEach(x=>{total*=Number(x.odd);text+=`${x.teams}\nTəxmin: ${x.prediction} | Əmsal: ${Number(x.odd).toFixed(2)}\n\n`});text+=`Ümumi Əmsal: ${total.toFixed(2)}`;await navigator.clipboard.writeText(text);alert('Kupon kopyalandı!')};
+publicCoupon();stats();analyses();

@@ -1,158 +1,20 @@
 <!DOCTYPE html>
-<html lang="az">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Futbolia Bet | Futbol Analizləri və Təxminlər</title>
-  <meta name="description" content="Futbol analizləri, təxminlər, nəticələr və şəffaf statistika.">
-  <link rel="stylesheet" href="style.css">
-</head>
+<html lang="az"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Futbolia Bet</title><link rel="stylesheet" href="style.css"></head>
 <body>
-<header class="header">
-  <div class="container nav">
-    <a class="logo" href="#">
-      <img src="assets/futbolia-bet-logo.png" alt="Futbolia Bet loqosu">
-      <span>Futbolia <b>Bet</b></span>
-    </a>
-
-    <nav>
-      <a href="#coupon">Kupon</a>
-      <a href="#analyses">Analizlər</a>
-      <a href="#results">Nəticələr</a>
-    </nav>
-
-    <div class="nav-socials">
-      <a class="social telegram" href="https://t.me/futboliabet" target="_blank" rel="noopener noreferrer" aria-label="Telegram">✈</a>
-      <a class="social whatsapp" href="https://chat.whatsapp.com/DcuV1zNbDaz9PSkHaxneqh?s=sw&p=i&mlu=4" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">◉</a>
-      <button id="adminBtn" class="btn secondary">Admin</button>
-    </div>
-  </div>
-</header>
-
+<header class="header"><div class="container nav"><a class="logo" href="#"><img src="assets/futbolia-bet-logo.png"><span>Futbolia <b>Bet</b></span></a><nav><a href="#coupon">Kupon</a><a href="#analyses">Analizlər</a><a href="#results">Nəticələr</a></nav><div class="nav-actions"><a class="social tg" href="https://t.me/futboliabet" target="_blank">✈</a><a class="social wa" href="https://chat.whatsapp.com/DcuV1zNbDaz9PSkHaxneqh?s=sw&p=i&mlu=4" target="_blank">◉</a><button id="adminBtn" class="btn secondary">Admin</button></div></div></header>
 <main class="container">
-  <section class="hero">
-    <div>
-      <span class="eyebrow">FUTBOL • ANALİZ • TƏXMİN</span>
-      <h1>Futbola sadəcə baxmırıq.<br><span>Onu analiz edirik.</span></h1>
-      <p>Futbolia Bet-də gündəlik təxminlər, ətraflı analizlər və nəticələrin açıq statistikası.</p>
-      <div class="hero-buttons">
-        <a class="btn" href="#coupon">Günün kuponuna bax</a>
-        <a class="btn outline" href="https://t.me/futboliabet" target="_blank" rel="noopener noreferrer">Telegram-a qoşul</a>
-      </div>
-    </div>
-    <div class="hero-card">
-      <img src="assets/futbolia-bet-logo.png" alt="">
-      <small>BU AY</small>
-      <strong id="heroRate">--%</strong>
-      <span>Uğur faizi</span>
-    </div>
-  </section>
-
-  <section class="community-section">
-    <div class="community-card telegram-card">
-      <div class="community-icon">✈</div>
-      <div>
-        <span class="eyebrow">TELEGRAM KANALI</span>
-        <h3>Canlı təxminləri qaçırma</h3>
-        <p>Yeni kuponlar və operativ paylaşımlar Telegram kanalımızda.</p>
-      </div>
-      <a class="btn" href="https://t.me/futboliabet" target="_blank" rel="noopener noreferrer">Telegram-a qoşul</a>
-    </div>
-
-    <div class="community-card whatsapp-card">
-      <div class="community-icon">◉</div>
-      <div>
-        <span class="eyebrow">WHATSAPP KANALI</span>
-        <h3>WhatsApp icmamıza qoşul</h3>
-        <p>Ən son paylaşımları WhatsApp kanalından da izləyə bilərsən.</p>
-      </div>
-      <a class="btn" href="https://chat.whatsapp.com/DcuV1zNbDaz9PSkHaxneqh?s=sw&p=i&mlu=4" target="_blank" rel="noopener noreferrer">WhatsApp-a qoşul</a>
-    </div>
-  </section>
-
-  <section id="coupon">
-    <div class="section-head"><div><span class="eyebrow">BUGÜN</span><h2>🔥 Günün Seçilmiş Kuponu</h2></div></div>
-    <article class="card coupon-card">
-      <div id="matchesContainer"><p class="muted">Yüklənir...</p></div>
-      <div class="coupon-footer">
-        <div>Ümumi Əmsal <strong id="totalOdd">1.00</strong></div>
-        <div class="coupon-actions"><span id="couponStatus" class="status pending">Gözləyir</span><button id="copyCoupon" class="btn">Kuponu kopyala</button></div>
-      </div>
-    </article>
-  </section>
-
-  <section id="results">
-    <div class="section-head"><div><span class="eyebrow">ŞƏFFAFLIQ</span><h2>📊 Təxmin Statistikası</h2></div></div>
-    <div class="stats-grid">
-      <div class="stat card"><span>Ümumi Təxmin</span><strong id="totalPredictions">0</strong></div>
-      <div class="stat card"><span>Uğurlu</span><strong id="wonPredictions">0</strong></div>
-      <div class="stat card"><span>Uğursuz</span><strong id="lostPredictions">0</strong></div>
-      <div class="stat card"><span>Uğur Faizi</span><strong id="successRate">0%</strong></div>
-    </div>
-  </section>
-
-  <section id="analyses">
-    <div class="section-head"><div><span class="eyebrow">SON PAYLAŞIMLAR</span><h2>📰 Matç Analizləri</h2></div></div>
-    <div id="analysesContainer" class="analysis-grid"><p class="muted">Yüklənir...</p></div>
-  </section>
+<section class="hero"><div><span class="eyebrow">FUTBOL • ANALİZ • TƏXMİN</span><h1>Futbola sadəcə baxmırıq.<br><span>Onu analiz edirik.</span></h1><p>Gündəlik təxminlər, ətraflı analizlər və açıq nəticə statistikası.</p><div class="actions"><a class="btn" href="#coupon">Günün kuponuna bax</a><a class="btn outline" href="https://t.me/futboliabet" target="_blank">Telegram-a qoşul</a></div></div><div class="hero-card"><img src="assets/futbolia-bet-logo.png"><small>ÜMUMİ UĞUR FAİZİ</small><strong id="heroRate">0%</strong></div></section>
+<section class="community"><div class="community-card"><div class="icon tg">✈</div><div><span class="eyebrow">TELEGRAM</span><h3>Futbolia Bet Telegram</h3><p>Yeni kupon və təxminlərdən xəbərdar ol.</p></div><a class="btn" href="https://t.me/futboliabet" target="_blank">Qoşul</a></div><div class="community-card"><div class="icon wa">◉</div><div><span class="eyebrow">WHATSAPP</span><h3>Futbolia Bet WhatsApp</h3><p>Paylaşımları WhatsApp kanalından izləyin.</p></div><a class="btn" href="https://chat.whatsapp.com/DcuV1zNbDaz9PSkHaxneqh?s=sw&p=i&mlu=4" target="_blank">Qoşul</a></div></section>
+<section id="coupon"><div class="section-head"><span class="eyebrow">SON / AKTİV</span><h2>🔥 Günün Seçilmiş Kuponu</h2></div><article class="card"><div id="couponTitle" class="coupon-title">Yüklənir...</div><div id="matchesContainer"><p class="muted">Yüklənir...</p></div><div class="coupon-footer"><div>Ümumi Əmsal <strong id="totalOdd">1.00</strong></div><div><span id="couponStatus" class="status pending">Gözləyir</span><button id="copyCoupon" class="btn">Kopyala</button></div></div></article></section>
+<section id="results"><div class="section-head"><span class="eyebrow">ŞƏFFAFLIQ</span><h2>📊 Təxmin Statistikası</h2></div><div class="stats-grid"><div class="stat card"><span>Ümumi Təxmin</span><strong id="totalPredictions">0</strong></div><div class="stat card"><span>Uğurlu</span><strong id="wonPredictions">0</strong></div><div class="stat card"><span>Uğursuz</span><strong id="lostPredictions">0</strong></div><div class="stat card"><span>Uğur Faizi</span><strong id="successRate">0%</strong></div></div></section>
+<section id="analyses"><div class="section-head"><span class="eyebrow">SON PAYLAŞIMLAR</span><h2>📰 Matç Analizləri</h2></div><div id="analysesContainer" class="analysis-grid"><p class="muted">Yüklənir...</p></div></section>
 </main>
-
-<div id="adminModal" class="modal hidden">
-  <div class="modal-box">
-    <button id="closeAdmin" class="close" aria-label="Bağla">×</button>
-    <div id="loginView">
-      <div class="admin-brand"><img src="assets/futbolia-bet-logo.png" alt="Futbolia Bet"></div>
-      <h2>Futbolia Bet Admin Girişi</h2>
-      <p class="muted">İdarəetmə yalnız səlahiyyətli istifadəçilər üçündür.</p>
-      <form id="loginForm">
-        <input id="email" type="email" placeholder="E-poçt" required>
-        <input id="password" type="password" placeholder="Şifrə" required>
-        <button class="btn" type="submit">Daxil ol</button>
-      </form>
-    </div>
-
-    <div id="adminView" class="hidden">
-      <div class="admin-top">
-        <div><span class="eyebrow">FUTBOLIA BET</span><h2>İdarəetmə Paneli</h2></div>
-        <button id="logoutBtn" class="btn danger">Çıxış</button>
-      </div>
-
-      <div class="admin-grid">
-        <form id="matchForm" class="admin-form">
-          <h3>Kupona oyun əlavə et</h3>
-          <input id="teams" placeholder="Real Madrid vs Barcelona" required>
-          <input id="league" placeholder="La Liga • 22:00">
-          <input id="prediction" placeholder="Məs: 2.5 ÜST" required>
-          <input id="odd" type="number" step="0.01" min="1.01" placeholder="Əmsal" required>
-          <button class="btn">Əlavə et</button>
-        </form>
-
-        <form id="analysisForm" class="admin-form">
-          <h3>Yeni analiz</h3>
-          <input id="analysisTitle" placeholder="Analiz başlığı" required>
-          <input id="stadium" placeholder="Stadion">
-          <textarea id="analysisText" placeholder="Analiz mətni" required></textarea>
-          <button class="btn">Yayımla</button>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
-
-<footer>
-  <div class="container footer-content">
-    <div class="footer-brand">
-      <img src="assets/futbolia-bet-logo.png" alt="">
-      <strong>Futbolia <b>Bet</b></strong>
-    </div>
-    <div class="footer-links">
-      <a href="https://t.me/futboliabet" target="_blank" rel="noopener noreferrer">Telegram</a>
-      <a href="https://chat.whatsapp.com/DcuV1zNbDaz9PSkHaxneqh?s=sw&p=i&mlu=4" target="_blank" rel="noopener noreferrer">WhatsApp</a>
-    </div>
-    <div>© 2026 Futbolia Bet</div>
-  </div>
-</footer>
-
-<script type="module" src="app.js"></script>
-</body>
-</html>
+<div id="adminModal" class="modal hidden"><div class="modal-box"><button id="closeAdmin" class="close">×</button><div id="loginView"><div class="admin-brand"><img src="assets/futbolia-bet-logo.png"></div><h2>Futbolia Bet Admin</h2><form id="loginForm"><input id="email" type="email" placeholder="E-poçt" required><input id="password" type="password" placeholder="Şifrə" required><button class="btn">Daxil ol</button></form></div>
+<div id="adminView" class="hidden"><div class="admin-top"><div><span class="eyebrow">ADMIN PANEL</span><h2>Kupon idarəetməsi</h2></div><button id="logoutBtn" class="btn danger">Çıxış</button></div>
+<div class="admin-tabs"><button class="tab active" data-tab="couponsTab">Kuponlar</button><button class="tab" data-tab="matchesTab">Oyunlar</button><button class="tab" data-tab="analysisTab">Analizlər</button></div>
+<div id="couponsTab" class="tab-panel"><div class="admin-grid"><form id="couponForm" class="admin-form"><h3>Yeni kupon</h3><input id="couponName" placeholder="Məs: Günün Kuponu #12" required><input id="couponDate" type="date"><button class="btn">Kupon yarat</button></form><div class="admin-form"><h3>Kupon siyahısı</h3><div id="adminCoupons"></div></div></div></div>
+<div id="matchesTab" class="tab-panel hidden"><div class="admin-grid"><form id="matchForm" class="admin-form"><h3 id="matchFormTitle">Oyun əlavə et</h3><select id="matchCoupon" required></select><input id="teams" placeholder="Real Madrid vs Barcelona" required><input id="league" placeholder="La Liga • 22:00"><input id="prediction" placeholder="Məs: 2.5 ÜST" required><input id="odd" type="number" step="0.01" min="1.01" placeholder="Əmsal" required><input id="editMatchId" type="hidden"><button class="btn">Yadda saxla</button><button id="cancelEdit" type="button" class="btn secondary hidden">Redaktəni ləğv et</button></form><div class="admin-form"><h3>Seçilmiş kuponun oyunları</h3><div id="adminMatches"></div></div></div></div>
+<div id="analysisTab" class="tab-panel hidden"><div class="admin-grid"><form id="analysisForm" class="admin-form"><h3>Yeni analiz</h3><input id="analysisTitle" placeholder="Analiz başlığı" required><input id="stadium" placeholder="Stadion"><textarea id="analysisText" placeholder="Analiz mətni" required></textarea><button class="btn">Yayımla</button></form><div class="admin-form"><h3>Analizlər</h3><div id="adminAnalyses"></div></div></div></div>
+</div></div></div>
+<footer><div class="container footer"><div>© 2026 Futbolia Bet</div><div><a href="https://t.me/futboliabet" target="_blank">Telegram</a> · <a href="https://chat.whatsapp.com/DcuV1zNbDaz9PSkHaxneqh?s=sw&p=i&mlu=4" target="_blank">WhatsApp</a></div></div></footer>
+<script type="module" src="app.js"></script></body></html>
